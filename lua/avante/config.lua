@@ -482,6 +482,7 @@ M._defaults = {
     --- @alias FileSelectorProvider "native" | "fzf" | "mini.pick" | "snacks" | "telescope" | string | fun(params: avante.file_selector.IParams|nil): nil
     provider = "native",
     -- Options override for custom providers
+    show_hidden = false,
     provider_opts = {},
   },
   suggestion = {

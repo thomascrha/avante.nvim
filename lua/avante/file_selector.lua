@@ -3,7 +3,7 @@ local Path = require("plenary.path")
 local scan = require("plenary.scandir")
 local Config = require("avante.config")
 
-local PROMPT_TITLE = "(Avante) Add a file"
+local PROMPT_TITLE = "(Avante tcrha) Add a file"
 
 --- @class FileSelector
 local FileSelector = {}
@@ -20,7 +20,7 @@ local function has_scheme(path) return path:find("^%w+://") ~= nil end
 function FileSelector:process_directory(absolute_path, project_root)
   if absolute_path:sub(-1) == Utils.path_sep then absolute_path = absolute_path:sub(1, -2) end
   local files = scan.scan_dir(absolute_path, {
-    hidden = false,
+    hidden = Config.file_selector.show_hidden or false,
     depth = math.huge,
     add_dirs = false,
     respect_gitignore = true,
@@ -61,7 +61,11 @@ end
 
 local function get_project_filepaths()
   local project_root = Utils.get_project_root()
-  local files = Utils.scan_directory({ directory = project_root, add_dirs = true })
+  local files = Utils.scan_directory({
+    directory = project_root,
+    add_dirs = true,
+    hidden = Config.file_selector.show_hidden or false
+  })
   files = vim.iter(files):map(function(filepath) return Utils.make_relative_path(filepath, project_root) end):totable()
 
   return vim.tbl_map(function(path)
